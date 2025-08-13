@@ -4,27 +4,19 @@ from typing import TextIO
 
 import vdf
 
+from dataclasses import dataclass
 
+
+@dataclass
 class NonSteamGame:
-    def __init__(
-        self,
-        app_id: int,
-        name: str,
-        exe_path: str,
-        start_dir: str,
-        icon_path: str,
-        launch_options: str,
-        is_hidden: bool,
-        last_play_time: int,
-    ):
-        self.app_id: int = app_id
-        self.name: str = name
-        self.exe_path: str = exe_path
-        self.start_dir: str = start_dir
-        self.icon_path: str = icon_path
-        self.launch_options: str = launch_options
-        self.is_hidden: bool = is_hidden
-        self.last_play_time: int = last_play_time
+    app_id: int
+    name: str
+    exe_path: str
+    start_dir: str
+    icon_path: str
+    launch_options: str
+    is_hidden: bool
+    last_play_time: int
 
     @classmethod
     def from_dict(cls, data: dict) -> NonSteamGame:
