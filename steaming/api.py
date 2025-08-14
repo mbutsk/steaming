@@ -30,7 +30,7 @@ class Manager:
             "",
             "",
             icon_path,
-            config.open_url_command.format(url=url),
+            config.OPEN_URL_COMMAND.format(url=url),
             int(time.time()),
         )
         self.games.append(game)
