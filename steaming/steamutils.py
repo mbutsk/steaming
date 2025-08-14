@@ -1,10 +1,9 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import TextIO
 
 import vdf
-
-from dataclasses import dataclass
 
 
 @dataclass
@@ -15,8 +14,8 @@ class NonSteamGame:
     start_dir: str
     icon_path: str
     launch_options: str
-    is_hidden: bool
     last_play_time: int
+    is_hidden: bool = False
 
     @classmethod
     def from_dict(cls, data: dict) -> NonSteamGame:
@@ -27,8 +26,8 @@ class NonSteamGame:
             start_dir=data["StartDir"],
             icon_path=data["icon"],
             launch_options=data["LaunchOptions"],
-            is_hidden=data["IsHidden"],
             last_play_time=data["LastPlayTime"],
+            is_hidden=data["IsHidden"],
         )
 
     @classmethod
@@ -63,7 +62,18 @@ class NonSteamGame:
             "tags": {},
         }
 
-    def add_to_library(self, fp: TextIO):
-        shortcuts = vdf.binary_load(fp)
-        shortcuts["shortcuts"][str(self.app_id)] = self.to_dict()
-        vdf.dump(shortcuts, fp)
+    def add_to_library(self, shortcuts_path: TextIO):
+        with open(shortcuts_path, 'rb') as fp:
+            shortcuts = vdf.binary_load(fp)
+        games = shortcuts.setdefault("shortcuts", {})
+
+        if games:
+            indices = list(map(int, games.keys()))
+            new_index = str(max(indices) + 1)
+        else:
+            new_index = "0"
+        
+        games[new_index] = self.to_dict()
+
+        with open(shortcuts_path, 'wb') as fp:
+            vdf.binary_dump(shortcuts, fp)
