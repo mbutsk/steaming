@@ -63,7 +63,7 @@ class NonSteamGame:
         }
 
     def add_to_library(self, shortcuts_path: TextIO):
-        with open(shortcuts_path, 'rb') as fp:
+        with open(shortcuts_path, "rb") as fp:
             shortcuts = vdf.binary_load(fp)
         games = shortcuts.setdefault("shortcuts", {})
 
@@ -72,10 +72,10 @@ class NonSteamGame:
             new_index = str(max(indices) + 1)
         else:
             new_index = "0"
-        
+
         games[new_index] = self.to_dict()
 
-        with open(shortcuts_path, 'wb') as fp:
+        with open(shortcuts_path, "wb") as fp:
             vdf.binary_dump(shortcuts, fp)
 
     @property
