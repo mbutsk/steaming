@@ -5,7 +5,9 @@ from dataclasses import dataclass, field
 
 import requests
 
-from . import config, steamutils
+from . import config, steamutils, exceptions
+
+import tmdb
 
 
 @dataclass
@@ -30,7 +32,7 @@ class Manager:
         title: str,
         url: str,
         icon_path: str = "",
-        image_url: "str | None" = None,
+        movie: "tmdb.Movie.Movie | None" = None,
     ):
         app_id = app_id = -next(
             x
@@ -49,7 +51,12 @@ class Manager:
         self.games.append(game)
         game.add_to_library(os.path.join(self.config_path, "shortcuts.vdf"))
 
-        if image_url:
+        if movie:
+            image_url = movie.get('full-size cover url')
+
+            if not image_url:
+                raise exceptions.NoPosterException()
+
             save_path = os.path.join(
                 self.config_path, "grid", f"{game.grid_hash}_hero.png"
             )
