@@ -77,3 +77,7 @@ class NonSteamGame:
 
         with open(shortcuts_path, 'wb') as fp:
             vdf.binary_dump(shortcuts, fp)
+
+    @property
+    def grid_hash(self):
+        return self.app_id & 0xFFFFFFFF
